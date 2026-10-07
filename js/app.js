@@ -1,10 +1,11 @@
-// Hero canvas and part search. Progressive: the page is complete without this file.
+// Hero carousel of car parts, part search and reveal on scroll.
+// Progressive: the page is complete without this file.
 (function () {
   'use strict';
 
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Hero: a brake disc turning slowly as the tall media of the hero. */
+  /* Hero: three recognisable parts on a slow turntable, with a caption that follows the front one. */
   function heroCanvas() {
     var canvas = document.querySelector('[data-hero3d]');
     if (!canvas || reduced || !window.THREE) { return; }
@@ -16,45 +17,197 @@
     } catch (err) {
       return;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
 
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-    camera.position.set(0, 1.1, 7);
-    camera.lookAt(0, 0, 0);
+    var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+    camera.position.set(0, 1.5, 6.4);
+    camera.lookAt(0, -0.15, 0);
 
-    var accent = new THREE.Color('#C45200');
-    var rule = new THREE.Color('#B59482');
+    scene.add(new THREE.AmbientLight(0xffffff, 0.72));
+    var key = new THREE.DirectionalLight(0xffffff, 0.85);
+    key.position.set(3, 5, 4);
+    scene.add(key);
+    var fill = new THREE.DirectionalLight(0xffd9bb, 0.35);
+    fill.position.set(-4, 1, 2);
+    scene.add(fill);
 
-    var disc = new THREE.Group();
-    disc.rotation.x = 1.05;
-    disc.rotation.z = 0.2;
-    scene.add(disc);
+    var steel = new THREE.MeshStandardMaterial({ color: 0x9fa5ab, metalness: 0.72, roughness: 0.34 });
+    var darkSteel = new THREE.MeshStandardMaterial({ color: 0x55595e, metalness: 0.65, roughness: 0.45 });
+    var orange = new THREE.MeshStandardMaterial({ color: 0xc45200, metalness: 0.35, roughness: 0.45 });
+    var ceramic = new THREE.MeshStandardMaterial({ color: 0xf1ece4, metalness: 0.05, roughness: 0.75 });
+    var copper = new THREE.MeshStandardMaterial({ color: 0xb06a3a, metalness: 0.7, roughness: 0.4 });
 
-    disc.add(new THREE.LineSegments(
-      new THREE.WireframeGeometry(new THREE.CylinderGeometry(2.4, 2.4, 0.26, 56, 1, true)),
-      new THREE.LineBasicMaterial({ color: rule, transparent: true, opacity: 0.55 })
-    ));
-    disc.add(new THREE.LineSegments(
-      new THREE.WireframeGeometry(new THREE.CylinderGeometry(1.05, 1.05, 0.5, 28, 1, true)),
-      new THREE.LineBasicMaterial({ color: accent, transparent: true, opacity: 0.6 })
-    ));
-    disc.add(new THREE.LineSegments(
-      new THREE.WireframeGeometry(new THREE.TorusGeometry(1.75, 0.012, 3, 64)),
-      new THREE.LineBasicMaterial({ color: rule, transparent: true, opacity: 0.5 })
-    ));
+    function brakeDisc() {
+      var g = new THREE.Group();
 
-    var bolts = new THREE.Group();
-    for (var i = 0; i < 5; i += 1) {
-      var angle = (i / 5) * Math.PI * 2;
-      var bolt = new THREE.Mesh(
-        new THREE.SphereGeometry(0.075, 12, 10),
-        new THREE.MeshBasicMaterial({ color: accent })
-      );
-      bolt.position.set(Math.cos(angle) * 1.4, 0.16, Math.sin(angle) * 1.4);
-      bolts.add(bolt);
+      var face = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.16, 54), steel);
+      g.add(face);
+
+      var innerRing = new THREE.Mesh(new THREE.CylinderGeometry(0.92, 0.92, 0.2, 40), darkSteel);
+      g.add(innerRing);
+
+      var hat = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.68, 0.46, 36), darkSteel);
+      hat.position.y = 0.3;
+      g.add(hat);
+
+      var bore = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.56, 24), steel);
+      bore.position.y = 0.34;
+      g.add(bore);
+
+      var i;
+      for (i = 0; i < 5; i += 1) {
+        var boltAngle = (i / 5) * Math.PI * 2;
+        var bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.52, 14), steel);
+        bolt.position.set(Math.cos(boltAngle) * 0.42, 0.34, Math.sin(boltAngle) * 0.42);
+        g.add(bolt);
+      }
+
+      for (i = 0; i < 14; i += 1) {
+        var holeAngle = (i / 14) * Math.PI * 2;
+        var hole = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.22, 12), darkSteel);
+        hole.position.set(Math.cos(holeAngle) * 1.18, 0, Math.sin(holeAngle) * 1.18);
+        g.add(hole);
+      }
+
+      for (i = 0; i < 24; i += 1) {
+        var ventAngle = (i / 24) * Math.PI * 2;
+        var vent = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.07, 0.11), darkSteel);
+        vent.position.set(Math.cos(ventAngle) * 1.22, -0.1, Math.sin(ventAngle) * 1.22);
+        vent.rotation.y = -ventAngle;
+        g.add(vent);
+      }
+
+      g.rotation.x = 0.44;
+      g.scale.setScalar(0.92);
+      return g;
     }
-    disc.add(bolts);
+
+    function oilFilter() {
+      var g = new THREE.Group();
+
+      var body = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.66, 1.55, 36), orange);
+      g.add(body);
+
+      var top = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.66, 0.12, 36), darkSteel);
+      top.position.y = 0.82;
+      g.add(top);
+
+      var seal = new THREE.Mesh(new THREE.TorusGeometry(0.54, 0.075, 10, 36), darkSteel);
+      seal.rotation.x = Math.PI / 2;
+      seal.position.y = 0.9;
+      g.add(seal);
+
+      var thread = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.18, 24), steel);
+      thread.position.y = 0.95;
+      g.add(thread);
+
+      var dome = new THREE.Mesh(new THREE.SphereGeometry(0.66, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), orange);
+      dome.rotation.x = Math.PI;
+      dome.position.y = -0.77;
+      g.add(dome);
+
+      var i;
+      for (i = 0; i < 3; i += 1) {
+        var rib = new THREE.Mesh(new THREE.TorusGeometry(0.665, 0.018, 8, 40), darkSteel);
+        rib.rotation.x = Math.PI / 2;
+        rib.position.y = -0.3 + i * 0.42;
+        g.add(rib);
+      }
+
+      g.scale.setScalar(1.05);
+      return g;
+    }
+
+    function sparkPlug() {
+      var g = new THREE.Group();
+
+      var terminal = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.3, 18), steel);
+      terminal.position.y = 1.18;
+      g.add(terminal);
+
+      var insulator = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.25, 1.15, 24), ceramic);
+      insulator.position.y = 0.46;
+      g.add(insulator);
+
+      var corrugation;
+      var i;
+      for (i = 0; i < 4; i += 1) {
+        corrugation = new THREE.Mesh(new THREE.TorusGeometry(0.235, 0.028, 8, 24), ceramic);
+        corrugation.rotation.x = Math.PI / 2;
+        corrugation.position.y = 0.6 + i * 0.16;
+        g.add(corrugation);
+      }
+
+      var hex = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.26, 6), steel);
+      hex.position.y = -0.2;
+      g.add(hex);
+
+      var shell = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.21, 0.52, 22), darkSteel);
+      shell.position.y = -0.58;
+      g.add(shell);
+
+      for (i = 0; i < 6; i += 1) {
+        var turn = new THREE.Mesh(new THREE.TorusGeometry(0.215, 0.022, 8, 22), darkSteel);
+        turn.rotation.x = Math.PI / 2;
+        turn.position.y = -0.4 - i * 0.075;
+        g.add(turn);
+      }
+
+      var tip = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.26, 12), copper);
+      tip.position.y = -0.95;
+      g.add(tip);
+
+      var ground = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.3, 0.07), darkSteel);
+      ground.position.set(0.16, -0.95, 0);
+      g.add(ground);
+
+      var hook = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.07, 0.07), darkSteel);
+      hook.position.set(0.08, -1.08, 0);
+      g.add(hook);
+
+      g.scale.setScalar(1.08);
+      return g;
+    }
+
+    var PARTS = [
+      { label: 'Disco de freio ventilado', build: brakeDisc, spin: 0.006 },
+      { label: 'Filtro de óleo', build: oilFilter, spin: 0.0075 },
+      { label: 'Vela de ignição', build: sparkPlug, spin: 0.0075 }
+    ];
+
+    var turntable = new THREE.Group();
+    scene.add(turntable);
+
+    var RADIUS = 2.15;
+    var nodes = PARTS.map(function (part, index) {
+      var angle = (index / PARTS.length) * Math.PI * 2;
+      var pivot = new THREE.Group();
+      pivot.position.set(Math.sin(angle) * RADIUS, 0, Math.cos(angle) * RADIUS);
+      var mesh = part.build();
+      pivot.add(mesh);
+      turntable.add(pivot);
+      return { pivot: pivot, mesh: mesh, spin: part.spin, angle: angle };
+    });
+
+    var caption = document.querySelector('[data-hero-caption]');
+    var current = -1;
+    function updateCaption(rotation) {
+      if (!caption) { return; }
+      var best = 0;
+      var bestScore = -Infinity;
+      nodes.forEach(function (node, index) {
+        var score = Math.cos(node.angle + rotation);
+        if (score > bestScore) { bestScore = score; best = index; }
+      });
+      if (best !== current) {
+        current = best;
+        caption.textContent = PARTS[best].label;
+        caption.classList.remove('is-shown');
+        void caption.offsetWidth;
+        caption.classList.add('is-shown');
+      }
+    }
 
     function resize() {
       var w = canvas.clientWidth;
@@ -73,7 +226,12 @@
       if (!running) { return; }
       window.requestAnimationFrame(frame);
       if (!resize()) { return; }
-      disc.rotation.y += 0.0035;
+      turntable.rotation.y += 0.0024;
+      nodes.forEach(function (node) {
+        node.mesh.rotation.y += node.spin;
+        node.pivot.rotation.y = -turntable.rotation.y;
+      });
+      updateCaption(turntable.rotation.y);
       renderer.render(scene, camera);
     }
 
@@ -145,9 +303,10 @@
         ? '1 item encontrado'
         : list.length + ' itens encontrados';
 
-      list.forEach(function (item) {
+      list.forEach(function (item, index) {
         var li = document.createElement('li');
         li.className = 'result';
+        li.style.animationDelay = Math.min(index, 8) * 35 + 'ms';
 
         var info = document.createElement('div');
         info.className = 'result__info';
@@ -198,6 +357,35 @@
     search();
   }
 
+  /* Reveal on scroll. Without script the page stays visible, so this is additive. */
+  function reveal() {
+    if (reduced || !('IntersectionObserver' in window)) { return; }
+
+    var targets = [].slice.call(document.querySelectorAll('.hero__inner, .hero__media, .section > .container'));
+    if (!targets.length) { return; }
+
+    document.documentElement.classList.add('js-reveal');
+
+    targets.forEach(function (target) {
+      target.setAttribute('data-reveal', '');
+      if (target.classList.contains('hero__media')) {
+        target.setAttribute('data-reveal-delay', '1');
+      }
+    });
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+
+    targets.forEach(function (target) { observer.observe(target); });
+  }
+
+  reveal();
   heroCanvas();
   partSearch();
 })();

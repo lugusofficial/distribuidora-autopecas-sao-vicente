@@ -2,6 +2,11 @@
 /* Style surfaces: No borders. One sand tinted surface per page. No shadows. */
 /* Decorative effect allowed on this page (max one): the hero media bleeding off the right edge, drawn on canvas. */
 
+/* Reveal on scroll. The class on <html> is added by js/app.js, so without script everything stays visible. */
+.js-reveal [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity 750ms ease, transform 750ms ease; }
+.js-reveal [data-reveal].is-visible { opacity: 1; transform: none; }
+.js-reveal [data-reveal][data-reveal-delay="1"] { transition-delay: 170ms; }
+
 /* hero: asymmetric-tall */
 .hero { position: relative; padding-block: var(--space-8) var(--space-9); display: grid; gap: var(--space-7); }
 .hero__inner { position: relative; z-index: 1; }
@@ -9,6 +14,7 @@
 .hero__text h1 { max-width: 16ch; }
 .hero__text .lead { max-width: 34ch; }
 .hero__media {
+  position: relative;
   background: var(--color-surface);
   border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   margin-left: var(--gutter);
@@ -17,6 +23,19 @@
 }
 .hero__canvas { width: 100%; height: 100%; opacity: 0; transition: opacity 700ms ease; }
 .hero__canvas[data-ready="true"] { opacity: 1; }
+.hero__caption {
+  position: absolute;
+  left: var(--space-5);
+  bottom: var(--space-5);
+  margin: 0;
+  max-width: 24ch;
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  opacity: 0;
+}
+.hero__caption.is-shown { animation: fade-up 600ms ease both; }
 
 @media (min-width: 64em) {
   .hero {
@@ -53,6 +72,11 @@
   gap: var(--space-3);
   align-items: center;
   max-width: none;
+  animation: fade-up 420ms ease both;
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
 }
 .result__info { display: grid; gap: var(--space-1); }
 .result__name { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--step-0); margin: 0; }
