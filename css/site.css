@@ -105,12 +105,47 @@
   .sticky-split__head { position: sticky; top: var(--space-7); }
 }
 
-/* depoimentos: proof-two-quotes */
-.quote-pair { display: grid; gap: var(--space-7); }
-.quote-pair blockquote { display: grid; gap: var(--space-3); max-width: none; }
-.quote-pair p { max-width: 42ch; }
-.quote-pair footer { font-size: var(--step--1); }
-@media (min-width: 48em) { .quote-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); } }
+/* depoimentos: slider de depoimentos */
+.slider { display: grid; gap: var(--space-6); }
+.slider__viewport { overflow: hidden; }
+.slider__track {
+  display: flex;
+  transition: transform 520ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+.slider__slide { flex: 0 0 100%; min-width: 100%; max-width: none; padding-right: var(--space-5); }
+.slider__slide blockquote { display: grid; gap: var(--space-4); max-width: none; }
+.slider__slide p { font-size: var(--step-1); max-width: 46ch; }
+.slider__slide footer { font-size: var(--step--1); }
+.slider__controls { display: flex; align-items: center; gap: var(--space-4); }
+.slider__arrow {
+  background: var(--color-surface);
+  border: 0;
+  border-radius: var(--radius-pill);
+  width: 2.75rem;
+  height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  transition: background 200ms ease, color 200ms ease;
+}
+.slider__arrow:hover { background: var(--color-accent); color: var(--color-on-accent); }
+.slider__arrow .icon--prev { transform: rotate(180deg); }
+.slider__dots { display: flex; gap: var(--space-2); margin-inline: auto 0; }
+.slider__dots li { max-width: none; display: flex; }
+.slider__dot {
+  background: var(--color-rule);
+  border: 0;
+  border-radius: var(--radius-pill);
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  transition: width 260ms ease, background 260ms ease;
+}
+.slider__dot[aria-current="true"] { background: var(--color-accent); width: 1.5rem; }
+@media (min-width: 48em) {
+  .slider__slide p { font-size: var(--step-2); max-width: 30ch; }
+}
 
 /* contato: contact-form-split */
 .facts { display: grid; gap: var(--space-5); align-content: start; }

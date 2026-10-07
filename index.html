@@ -116,15 +116,40 @@
   <section class="section section--proof" id="depoimentos" aria-labelledby="depoimentos-title" data-layout="proof-two-quotes">
     <div class="container stack--lg">
       <h2 id="depoimentos-title">Quem compra aqui</h2>
-      <div class="quote-pair">
-        <blockquote>
-          <p>Espaço reservado para o depoimento de uma oficina atendida.</p>
-          <footer class="muted">Nome e oficina a fornecer. Conteúdo que a empresa precisa aprovar.</footer>
-        </blockquote>
-        <blockquote>
-          <p>Espaço reservado para o depoimento de um gestor de frota.</p>
-          <footer class="muted">Nome e empresa a fornecer. Conteúdo que a empresa precisa aprovar.</footer>
-        </blockquote>
+      <div class="slider" data-slider>
+        <div class="slider__viewport">
+          <ul class="slider__track" data-slider-track>
+            <li class="slider__slide">
+              <blockquote>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam.</p>
+                <footer class="muted">Lorem ipsum, oficina mecânica. Texto de demonstração a substituir.</footer>
+              </blockquote>
+            </li>
+            <li class="slider__slide">
+              <blockquote>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor.</p>
+                <footer class="muted">Lorem ipsum, gestor de frota. Texto de demonstração a substituir.</footer>
+              </blockquote>
+            </li>
+            <li class="slider__slide">
+              <blockquote>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum sed perspiciatis unde.</p>
+                <footer class="muted">Lorem ipsum, retífica. Texto de demonstração a substituir.</footer>
+              </blockquote>
+            </li>
+          </ul>
+        </div>
+        <div class="slider__controls">
+          <button class="slider__arrow" type="button" data-slider-prev>
+            <svg class="icon icon--prev" aria-hidden="true" focusable="false"><use href="#icon-arrow"></use></svg>
+            <span class="visually-hidden">Depoimento anterior</span>
+          </button>
+          <ul class="slider__dots" data-slider-dots></ul>
+          <button class="slider__arrow" type="button" data-slider-next>
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#icon-arrow"></use></svg>
+            <span class="visually-hidden">Próximo depoimento</span>
+          </button>
+        </div>
       </div>
     </div>
   </section>
