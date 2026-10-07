@@ -96,6 +96,12 @@
   .inline-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-7); }
 }
 
+/* fotos */
+.shot { margin: 0; display: grid; gap: var(--space-3); }
+.shot img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); }
+.shot figcaption { color: var(--color-muted); font-size: var(--step--1); max-width: 52ch; }
+.shot--wide img { aspect-ratio: 16 / 9; }
+
 /* linhas: services-sticky-heading */
 .sticky-split__head { align-self: start; }
 .sticky-split__head p { max-width: 32ch; }
